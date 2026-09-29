@@ -7,12 +7,17 @@ spring:
             # Routes statiques vers les microservices customer et product.
             - id: r1
               # Cette route mene vers le customer service.
-              uri: http://localhost:8081
+              #uri: http://localhost:8081
+              #quand tu recois une requete sur /customers/**, tu la redirige vers le service qui s'appelle customer-service
+              # lb : load blancer
+              uri : lb://CUSTOMER-SERVICE
               # Conditions a satisfaire pour acheminer la requete.
               predicates:
                 - Path=/customers/**
             - id: r2
               # Cette route mene vers le product service.
-              uri: http://localhost:8082
+              #uri: http://localhost:8082
+                #quand tu recois une requete sur /products/**, tu la redirige vers le service qui s'appelle product-service
+              uri : lb://PRODUCT-SERVICE
               predicates:
                 - Path=/products/**
