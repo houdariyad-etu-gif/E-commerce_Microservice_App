@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            # Routes statiques vers les microservices customer et product.
+            - id: r1
+              # Cette route mene vers le customer service.
+              uri: http://localhost:8081
+              # Conditions a satisfaire pour acheminer la requete.
+              predicates:
+                - Path=/customers/**
+            - id: r2
+              # Cette route mene vers le product service.
+              uri: http://localhost:8082
+              predicates:
+                - Path=/products/**
