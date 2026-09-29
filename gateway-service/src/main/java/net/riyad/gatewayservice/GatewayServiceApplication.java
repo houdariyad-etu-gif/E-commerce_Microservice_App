@@ -2,6 +2,9 @@ package net.riyad.gatewayservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
+import org.springframework.cloud.gateway.discovery.DiscoveryClientRouteDefinitionLocator;
+import org.springframework.cloud.gateway.discovery.DiscoveryLocatorProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +17,8 @@ public class GatewayServiceApplication {
     }
 
     // @Bean de type RouteLocator : pour Configuration des routes de maniere statique en utilisant java au lieu de application.yml
-    @Bean
+    //si le Bean est commenté[rien ne marchera ici], les routes sont configurées alors via le fichier application.yml
+    //@Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("r1", p -> p.path("/customers/**")
@@ -22,5 +26,12 @@ public class GatewayServiceApplication {
                 .route("r2", p -> p.path("/products/**")
                         .uri("lb://INVENTORY-SERVICE"))
                 .build();
+    }
+    //systeme de routage dynamique
+    @Bean
+    public DiscoveryClientRouteDefinitionLocator dynamicRoutes(
+        ReactiveDiscoveryClient rdc, DiscoveryLocatorProperties dlp
+    ){
+        return new DiscoveryClientRouteDefinitionLocator(rdc, dlp);
     }
 }
